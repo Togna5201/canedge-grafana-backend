@@ -98,6 +98,7 @@ def query_view():
 
     """
 
+    logger.warning(f"Database registrati nel server: {list(app.dbs.keys())}")
     # Caching on a request level. Drastically improves performance when the same panel is loaded twice - e.g. when
     # annotations are enabled/disabled without changing the view.
     @cache.memoize(timeout=50)
@@ -148,7 +149,6 @@ def _query_time_series(req: dict, start_date: datetime, stop_date: datetime) -> 
             continue
 
         # Check that DB is known
-        logger.warning(f"Database registrati nel server: {list(app.dbs.keys())}")
         if target_req["db"] not in app.dbs.keys():
             logger.warning(f"Unknown DB: {target_req['db']}")
             continue
