@@ -28,8 +28,8 @@ def _json_target_decode(dct):
         dct["itf"] = CanedgeInterface[dct["itf"].upper()]
     if "chn" in dct:
         dct["chn"] = CanedgeChannel[dct["chn"].upper()]
-    if "db" in dct:
-        pass # dct["db"] = dct["db"].lower()
+    # if "db" in dct:
+    #     dct["db"] = dct["db"].lower()
     if "method" in dct:
         dct["method"] = SampleMethod[dct["method"].upper()]
     if "signal" in dct:
