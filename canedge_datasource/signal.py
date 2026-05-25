@@ -264,8 +264,9 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     #TODO Find out how to do pre-filtering on PGNs to speed up J1939 decoding
                     pass
                 else:
-                    df_raw = df_raw[df_raw['ID'].isin([x & 0x7FFFFFFF for x in db.frames.keys()])]
+                    # df_raw = df_raw[df_raw['ID'].isin([x & 0x7FFFFFFF for x in db.frames.keys()])]
                     # TODO optimize by using requested signals to create a smaller subset DBC and filter by that
+                    pass
 
                 if tp_type != "":
                     # Decode after first re-segmenting CAN data according to TP type (uds, j1939, nmea)
