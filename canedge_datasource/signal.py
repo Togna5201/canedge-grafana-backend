@@ -371,7 +371,8 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
     import json
     print(json.dumps(clean_result)[:500])
                              
-    return clean_result
+    #return clean_result
+    return Response(json.dumps(clean_result), mimetype="application/json")
 
 
 
