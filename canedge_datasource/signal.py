@@ -360,19 +360,13 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
 
     clean_result = []
     for r in result:
-        clean_result.append({
-            "target": str(r["target"]),
-            "datapoints": [
-                [int(t), float(v)]
-                for t, v in r["datapoints"]
-            ]
-        })
-        
-    import json
-    print(json.dumps(clean_result)[:500])
-                             
+        for t, v in r["datapoints"]:
+            clean_result.append({
+                "time": int(t),
+                "value": float(v),
+                "target": str(r["target"])
+            })
     return clean_result
-    # return Response(json.dumps(clean_result), mimetype="application/json")
 
 
 
