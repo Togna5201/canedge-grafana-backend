@@ -357,17 +357,19 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                            r['datapoints'].extend(points)
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
+    from datetime import datetime, timezone
 
     clean_result = []
     for r in result:
         for t, v in r["datapoints"]:
+            # Converti ms Unix → stringa ISO 8601
+            dt = datetime.fromtimestamp(int(t) / 1000, tz=timezone.utc)
             clean_result.append({
-                "time": int(t),
+                "time": dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",  # es. "2026-05-27T07:32:09.000Z"
                 "value": float(v),
                 "target": str(r["target"])
             })
     return clean_result
-
 
 
 def _load_log_file(fs, file, itf_used, passwords):
