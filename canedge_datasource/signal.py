@@ -262,9 +262,21 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                 # differentiate standard and extended. Result is potentially unused IDs passed for decoding if overlaps
                 if db.protocol == "J1939":
                     #TODO Find out how to do pre-filtering on PGNs to speed up J1939 decoding
-                    pass
+                    # 1. Estrai tutti i PGN validi definiti nel tuo file DBC
+                    # can_decoder memorizza i PGN come chiavi o all'interno dell'oggetto frame
+                    valid_pgns = set(db.frames.keys()) 
+                
+                    # 2. Estrai il PGN da ogni riga del log CAN (islando i bit corretti dall'ID a 29 bit)
+                    # Nel protocollo J1939, il PGN si ottiene spostando l'ID a destra di 8 bit e applicando la maschera 0x3FFFF
+                    df_raw['PGN'] = (df_raw['ID'] >> 8) & 0x3FFFF
+                
+                    # 3. Mantieni solo le righe del file che corrispondono a un PGN presente nel DBC
+                    df_raw = df_raw[df_raw['PGN'].isin(valid_pgns)]
+                    
+                    # Rimuovi la colonna temporanea per non sprecare memoria
+                    df_raw.drop(['PGN'], axis=1, inplace=True)
                 else:
-                    # df_raw = df_raw[df_raw['ID'].isin([x & 0x7FFFFFFF for x in db.frames.keys()])]
+                    df_raw = df_raw[df_raw['ID'].isin([x & 0x7FFFFFFF for x in db.frames.keys()])]
                     # TODO optimize by using requested signals to create a smaller subset DBC and filter by that
                     pass
 
