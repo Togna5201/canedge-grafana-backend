@@ -191,8 +191,8 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
     # Init response to make sure that we respond to all targets, even if without data points
     # result = [{'refId': x.refid, 'target': x.target, 'datapoints': []} for x in signal_queries]
     # Inizializzazione moderna compatibile con tutti i pannelli Grafana
-    # result = [{'refId': x.refid, 'target': x.target, 'columns': ['value', 'time'], 'rows': []} for x in signal_queries]
-    result = [{'refId': x.refid, 'target': x.target, 'columns': ['time', 'value'], 'rows': []} for x in signal_queries]
+    # result = [{'refId': x.refid, 'target': x.target, 'columns': ['time', 'value'], 'rows': []} for x in signal_queries]
+    result = [{'target': x.target,'datapoints': []} for x in signal_queries]
 
     # Keep track on how much data has been processed (in MB)
     data_processed_mb = 0
@@ -351,10 +351,9 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     for r in result:
                         if r['target'] == signal_group.target:
                             # Creiamo righe piatte composte da [valore, timestamp]
-                            # new_rows = [[float(v), int(t)] for v, t in zip(values, timestamps)]
-                            new_rows = [[int(t), float(v)] for v, t in zip(values, timestamps)]
-                            if new_rows:
-                                r['rows'].extend(new_rows)
+                            new_points = [[float(v), int(t)] for v, t in zip(values, timestamps)]
+                            if new_points:
+                                    r['datapoints'].extend(new_points)
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
     return result
