@@ -347,7 +347,8 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     # Timestamps and values to list
                     # CORREZIONE 1: Usa la divisione intera (//) per forzare i millisecondi senza decimali (int)
                     # Questo sblocca il riconoscimento nativo dell'asse X su Grafana
-                    timestamps = (df_phys_signal_resample["time_orig"].astype(np.int64) // 10 ** 6).tolist()
+                    # timestamps = (df_phys_signal_resample["time_orig"].astype(np.int64) // 10 ** 6).tolist()
+                    timestamps = df_phys_signal_resample.index.astype(np.int64) // 10**6
                     values = df_phys_signal_resample["Physical Value"].values.tolist()
 
                     for r in result:
@@ -357,7 +358,6 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
 
-    from flask import jsonify
     clean_result = []
     for r in result:
         clean_result.append({
@@ -371,7 +371,7 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
     import json
     print(json.dumps(clean_result)[:500])
                              
-    return jsonify(clean_result)
+    return clean_result
 
 
 
