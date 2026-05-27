@@ -156,8 +156,7 @@ def _query_time_series(req: dict, start_date: datetime, stop_date: datetime) -> 
         # If multiple signals in request, add each as signal query
         for signal in target_req["signal"]:
             # Provide a readable unique target name (the list of signals is replaced by the specific signal)
-            # target_name = ":".join([str(x) for x in dict(target_req, signal=signal).values()])
-            target_name = signal
+            target_name = ":".join([str(x) for x in dict(target_req, signal=signal).values()])
 
             signal_queries.append(SignalQuery(refid=elm["refId"],
                                               target=target_name,
