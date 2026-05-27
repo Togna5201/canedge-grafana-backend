@@ -353,7 +353,7 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     for r in result:
                         if r['target'] == signal_group.target:
                            points = [[int(t), float(v)] for t, v in zip(timestamps, values)]
-                            r['datapoints'].extend(points)
+                           r['datapoints'].extend(points)
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
 
