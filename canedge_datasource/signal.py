@@ -193,7 +193,8 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
     # Inizializzazione moderna compatibile con tutti i pannelli Grafana
     # result = [{'refId': x.refid, 'target': x.target, 'columns': ['time', 'value'], 'rows': []} for x in signal_queries]
     # result = [{'target': x.target,'datapoints': []} for x in signal_queries]
-    result = [{ "name": x.target, "columns": [{"text": "Time", "type": "time"}, {"text": "Value", "type": "number"}], "values": []} for x in signal_queries]
+    # result = [{ "name": x.target, "columns": [{"text": "Time", "type": "time"}, {"text": "Value", "type": "number"}], "values": []} for x in signal_queries]
+    result = [{ "target": x.target, "datapoints": []} for x in signal_queries]
 
     # Keep track on how much data has been processed (in MB)
     data_processed_mb = 0
@@ -350,9 +351,9 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     values = df_phys_signal_resample["Physical Value"].values.tolist()
 
                     for r in result:
-                        if r['name'] == signal_group.target:
-                            points = [[int(t), float(v)] for t, v in zip(timestamps, values)]
-                            r['values'].extend(points)
+                        if r['target'] == signal_group.target:
+                            points = [[float(v), int(t)] for t, v in zip(values, timestamps)]
+                            r['datapoints'].extend(points)
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
     return result
