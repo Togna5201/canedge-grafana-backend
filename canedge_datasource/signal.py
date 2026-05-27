@@ -193,7 +193,7 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
     # Inizializzazione moderna compatibile con tutti i pannelli Grafana
     # result = [{'refId': x.refid, 'target': x.target, 'columns': ['time', 'value'], 'rows': []} for x in signal_queries]
     # result = [{'target': x.target,'datapoints': []} for x in signal_queries]
-    result = [{ "name": x.target, "columns": [{"text": "Time", "type": "time"}, {"text": "Value", "type": "number"}], "values": [[], []]} for x in signal_queries]
+    result = [{ "name": x.target, "columns": [{"text": "Time", "type": "time"}, {"text": "Value", "type": "number"}], "values": []} for x in signal_queries]
 
     # Keep track on how much data has been processed (in MB)
     data_processed_mb = 0
