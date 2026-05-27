@@ -340,19 +340,22 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
                     df_phys_signal_resample.dropna(axis=0, how='any', inplace=True)
 
                     # Timestamps and values to list
-                    timestamps = (df_phys_signal_resample["time_orig"].astype(np.int64) / 10 ** 6).tolist()
+                    # CORREZIONE 1: Usa la divisione intera (//) per forzare i millisecondi senza decimali (int)
+                    # Questo sblocca il riconoscimento nativo dell'asse X su Grafana
+                    timestamps = (df_phys_signal_resample["time_orig"].astype(np.int64) // 10 ** 6).tolist()
                     values = df_phys_signal_resample["Physical Value"].values.tolist()
 
-                    # Get the list index of the result to update
-                    result_index = [idx for idx, value in enumerate(result) if value['target'] == signal_group.target][0]
+                    # CORREZIONE 2: Completa la logica di inserimento dati pulendo i punti vuoti
+                    for r in result:
+                        if r['target'] == signal_group.target:
+                            # Uniamo i dati creando tuple pulite [valore, timestamp]
+                            new_datapoints = [[v, t] for v, t in zip(values, timestamps)]
+                            
+                            # Evita di appendere liste vuote o che contengono solo null
+                            if new_datapoints:
+                                r['datapoints'].extend(new_datapoints)
 
-                    # If new session, insert a None/null data point to indicate that data is not continuous
-                    if new_session:
-                        result[result_index]["datapoints"].extend([[None, None]])
-
-                    # Update result with additional datapoints
-                    result[result_index]["datapoints"].extend(list(zip(values, timestamps)))
-
+    # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
     return result
 
 
