@@ -352,11 +352,27 @@ def time_series_phy_data(fs, signal_queries: [SignalQuery], start_date: datetime
 
                     for r in result:
                         if r['target'] == signal_group.target:
-                            points = [[float(v), int(t)] for t, v in zip(values, timestamps)]
+                           points = [[int(t), float(v)] for t, v in zip(timestamps, values)]
                             r['datapoints'].extend(points)
 
     # Alla fine di tutta la funzione time_series_phy_data, restituisci il risultato
-    return result
+
+    from flask import jsonify
+    clean_result = []
+    for r in result:
+        clean_result.append({
+            "target": str(r["target"]),
+            "datapoints": [
+                [int(t), float(v)]
+                for t, v in r["datapoints"]
+            ]
+        })
+        
+    import json
+    print(json.dumps(clean_result)[:500])
+                             
+    return jsonify(clean_result)
+
 
 
 def _load_log_file(fs, file, itf_used, passwords):
