@@ -17,6 +17,7 @@ class CanedgeChannel(IntEnum):
 
     CH1 = 1
     CH2 = 2
+    CHINT = 9
 
 
 class SampleMethod(IntEnum):
